@@ -10,7 +10,7 @@ const dateTime = document.querySelector(".date_div");
 const apiKey = `CN8YpDrLos1FSNLR5w54u6PrCq3gposf`;
 
 const getKey = (city) => {
-     const baseUrl = `http://dataservice.accuweather.com/locations/v1/cities/search?`;
+     const baseUrl = `https://dataservice.accuweather.com/locations/v1/cities/search?`;
      const citySearch = `apikey=${apiKey}&q=${city}`;
      fetch(baseUrl + citySearch)
           .then(response => response.json())
@@ -22,7 +22,7 @@ const getKey = (city) => {
 }
 
 const getWeather = (key) => {
-     const baseUrl = `http://dataservice.accuweather.com/currentconditions/v1/${key}?`;
+     const baseUrl = `https://dataservice.accuweather.com/currentconditions/v1/${key}?`;
      const weatherSearch = `apikey=${apiKey}`;
      fetch(baseUrl + weatherSearch)
           .then(response => response.json())
@@ -63,7 +63,7 @@ const locationUI = (data) => {
 const startApp = () => {
      navigator.geolocation.getCurrentPosition((position) => {
           la = `${position.coords.latitude}, ${position.coords.longitude}`
-          const baseUrl = `http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?`
+          const baseUrl = `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?`
           const coordinates = `apikey=${apiKey}&q=${la}`
           fetch(baseUrl + coordinates)
           .then(response => response.json())
@@ -73,7 +73,6 @@ const startApp = () => {
      })
      })
 }
-
 startApp()
 
 
