@@ -7,7 +7,7 @@ const longitude = document.querySelector(".longitude");
 const latitude = document.querySelector(".latitude");
 const locationDetails = document.querySelector("#country_name");
 const dateTime = document.querySelector(".date_div");
-const apiKey = `CN8YpDrLos1FSNLR5w54u6PrCq3gposf`;
+const apiKey = `MdcTW4NQdlvQHjWnzmuAMqL5GkAHp7lF`;
 
 const getKey = (city) => {
      const baseUrl = `https://dataservice.accuweather.com/locations/v1/cities/search?`;
