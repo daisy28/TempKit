@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TempKit</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+     <main>
+          <section class="content">
+               <section class="section_one">
+                    <h1 class="heading">TempKit</h1>
+                    <div class="date_div">
+                         <p class="date">Tuesday, March 21, 2023.</p>
+                         <p class="time">3:03</p>
+                    </div>
+                    <div class="date_info">
+                         <p class="date">Note: Time is displayed in GMT+0100 (West Africa Standard Time).</p>
+                    </div>
+                    <div class="input_div">
+                         <form id="input">
+                              <input class="input" type="text" placeholder="Search by city name" name="location" />
+                         </form>
+                         <div class="longitude">
+                              <p>Longitude: </p>
+                         </div>
+                         <div class="latitude">
+                              <p>Latitude: </p>
+                         </div>
+                    </div>
+               </section>
+               
+               <section class="section_two">
+                    <div class="section_two_header" id="country_name">
+                         <p>Country</p>
+                         <p class="state">State</p>
+                    </div>
+                    <div class="image_container">
+                         <div class="image">
+                              <img id="img" src="images/daytime1.jpg" alt="" />
+                         </div>
+                         <div class="icon">
+                              <img id="icon" src="icons/1.svg" alt="" />
+                         </div>
+                    </div>
+                    <div>
+                         <bold class="location" id="city-name">City name</bold>
+                         <div id="info">
+                              <p class="weather_info">Weather</p>
+                              <p class="weather_degree">&deg;C</p>
+                         </div>
+                    </div>
+                    <div>
+                         <small>TempKit is used to check for only <b>current weather conditions</b> for a specific location and not for <b>forecasts</b>. Searches require a city name.</small>
+                    </div>
+               
+               </section>
+          </section>
+          
+          
+     </main>
+     
+     <script src="script.js"></script>
+</body>
+</html>
