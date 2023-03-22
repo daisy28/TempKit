@@ -38,13 +38,18 @@ input.addEventListener("submit", (e) => {
 });
 
 const updateUI = (info) => {
-  const date = new Date(info.EpochTime * 1000);
+  const date = new Date();
   const currentDate = date.toDateString();
-  const currentTime = `${date.getHours()}:${date.getMinutes()}`;
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+  const newFormat = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  minutes = minutes < 10 ? `0${minutes}` : minutes;
   weatherInfo.innerHTML = `
           <p>${info.WeatherText}</p>
           <p>${info.Temperature.Metric.Value}&deg;C</p>`;
-  dateTime.innerHTML = `<p class="date">${currentDate}</p><p class="time">${currentTime}</p>`;
+  dateTime.innerHTML = `<p class="date">${currentDate}</p><p class="time">${hours}:${minutes} ${newFormat}</p>`;
   info.IsDayTime
     ? image.setAttribute("src", "images/daytime1.jpg")
     : image.setAttribute("src", "images/night.jpg");
