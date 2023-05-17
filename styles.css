@@ -223,6 +223,14 @@ button {
   object-fit: cover;
 }
 
+.error{
+  text-align: center;
+  color: crimson;
+  font-weight: 700;
+  font-size: 1.5rem;
+  display: none;
+}
+
 /* MEDIA QUERIES */
 
 @media screen and (min-width: 768px) {

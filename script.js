@@ -7,37 +7,69 @@ const longitude = document.querySelector(".longitude");
 const latitude = document.querySelector(".latitude");
 const locationDetails = document.querySelector("#country_name");
 const dateTime = document.querySelector(".date_div");
-const apiKey = `IGZlwXkh6webG6ZtJDe8fTW9roKF0MaT`;
+const error = document.querySelector(".error");
 
-const getKey = (city) => {
-  const baseUrl = `https://dataservice.accuweather.com/locations/v1/cities/search?`;
-  const citySearch = `apikey=${apiKey}&q=${city}`;
-  fetch(baseUrl + citySearch)
-    .then((response) => response.json())
-    .then((data) => {
-      locationUI(data[0]);
-      return getWeather(data[0].Key);
-    });
+class WeatherApp {
+  constructor() {
+    this.apiKey = `QTNsYjn14AVUNQucfCXoVYqIO1GcMGNd`;
+    this.cityURI = `https://dataservice.accuweather.com/locations/v1/cities/search?`;
+    this.weatherURI = `https://dataservice.accuweather.com/currentconditions/v1/`;
+    this.position = `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?`;
+  }
+  async getKey(city){
+    const citySearch = `apikey=${this.apiKey}&q=${city}`;
+    const response = await fetch (this.cityURI + citySearch);
+    const data = await response.json();
+    return data[0];
+  }
+  async getWeather(key){
+  const baseUrl = `${this.weatherURI}${key}?`;
+  const weatherSearch = `apikey=${this.apiKey}`;
+  const response = await fetch (baseUrl + weatherSearch);
+  const data = await response.json();
+  return data[0];
+  }
+  async startApp(){
+  navigator.geolocation.getCurrentPosition((position) => {
+    const geoPosition = `${position.coords.latitude}, ${position.coords.longitude}`;
+    const coordinates = `apikey=${this.apiKey}&q=${geoPosition}`;
+    fetch(this.position + coordinates)
+      .then((response) => response.json())
+      .then((data) => {
+        weather(data.LocalizedName)
+          .then(data => {
+            updateUI(data)
+          })
+          .catch(err => console.log(err))
+      }).catch(err => console.log(err));
+  });
+}
 };
 
-const getWeather = (key) => {
-  const baseUrl = `https://dataservice.accuweather.com/currentconditions/v1/${key}?`;
-  const weatherSearch = `apikey=${apiKey}`;
-  fetch(baseUrl + weatherSearch)
-    .then((response) => response.json())
-    .then((data) => {
-      return updateUI(data[0]);
-    });
-};
+const getForecast = new WeatherApp();
+ const weather = async (city) => {
+  const cityData = await (getForecast.getKey(city))
+  const weatherData = await (getForecast.getWeather(cityData.Key))
+  return {cityData, weatherData}
+}
 
 input.addEventListener("submit", (e) => {
   e.preventDefault();
   const value = input.location.value.trim();
   input.reset();
-  return getKey(value);
+  weather(value)
+    .then(data => {
+      updateUI(data)
+    })
+  .catch(err => {
+    console.log(err);
+    error.style.display = "block";
+  });
 });
 
 const updateUI = (info) => {
+  const city = info.cityData;
+  const weather = info.weatherData;
   const date = new Date();
   const currentDate = date.toDateString();
   let hours = date.getHours();
@@ -47,32 +79,17 @@ const updateUI = (info) => {
   hours = hours ? hours : 12;
   minutes = minutes < 10 ? `0${minutes}` : minutes;
   weatherInfo.innerHTML = `
-          <p>${info.WeatherText}</p>
-          <p>${info.Temperature.Metric.Value}&deg;C</p>`;
+          <p>${weather.WeatherText}</p>
+          <p>${weather.Temperature.Metric.Value}&deg;C</p>`;
   dateTime.innerHTML = `<p class="date">${currentDate}</p><p class="time">${hours}:${minutes} ${newFormat}</p>`;
-  info.IsDayTime
+  weather.IsDayTime
     ? image.setAttribute("src", "images/daytime1.jpg")
     : image.setAttribute("src", "images/night.jpg");
-  weatherIcon.setAttribute("src", `icons/${info.WeatherIcon}.svg`);
+  weatherIcon.setAttribute("src", `icons/${weather.WeatherIcon}.svg`);
+  cityName.innerHTML = `<p>${city.LocalizedName}</p>`;
+  longitude.innerHTML = `<p>Longitude: ${city.GeoPosition.Longitude}</p> `;
+  latitude.innerHTML = `<p>Latitude: ${city.GeoPosition.Latitude}</p>`;
+  locationDetails.innerHTML = `<p>${city.Country.EnglishName}(${city.Country.ID})</p><p class="state">${city.AdministrativeArea.EnglishName}</p>`;
 };
 
-const locationUI = (data) => {
-  cityName.innerHTML = `<p>${data.LocalizedName}</p>`;
-  longitude.innerHTML = `<p>Longitude: ${data.GeoPosition.Longitude}</p> `;
-  latitude.innerHTML = `<p>Latitude: ${data.GeoPosition.Latitude}</p>`;
-  locationDetails.innerHTML = `<p>${data.Country.EnglishName}(${data.Country.ID})</p><p class="state">${data.AdministrativeArea.EnglishName}</p>`;
-};
-
-const startApp = () => {
-  navigator.geolocation.getCurrentPosition((position) => {
-    const geoPosition = `${position.coords.latitude}, ${position.coords.longitude}`;
-    const baseUrl = `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?`;
-    const coordinates = `apikey=${apiKey}&q=${geoPosition}`;
-    fetch(baseUrl + coordinates)
-      .then((response) => response.json())
-      .then((data) => {
-        return getKey(data.LocalizedName);
-      });
-  });
-};
-startApp();
+getForecast.startApp();
